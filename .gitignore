@@ -9,4 +9,6 @@ build/
 .envrc
 
 # Output directory for generated files
-configs/
+# Keep the `configs/` directory in git but ignore its contents.  Track `configs/.gitkeep` only.
+configs/*
+!configs/.gitkeep
