@@ -20,17 +20,31 @@ Key facts (current repo behavior)
 Prerequisites
 -------------
 - Docker (engine) available.
-- Vendor installers (Dell racadm, Supermicro SUM) if you want those utilities installed into the image — place them under `misc/` before building.
 
 Build
 -----
-Build the image (helper):
+
+There are multiple options to build.
+
+### Make
+
+```bash
+make build
+```
+
+### Build script
 
 ```bash
 ./build.sh
 ```
 
-The build will attempt to install vendor tooling by running `scripts/install_vendors.sh`. If you do not want that to run at build time, you must remove or modify the step in `Dockerfile`.
+### Direct docker build
+
+If you prefer to run docker directly instead of using `./build.sh`, run this from the repository root:
+
+```bash
+docker build -t bios-tool:dev .
+```
 
 Run
 ---
