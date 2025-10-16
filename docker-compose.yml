@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  bios-tool:
+    build: .
+    volumes:
+      - .:/opt/bios-tool
+    tty: true
+    stdin_open: true

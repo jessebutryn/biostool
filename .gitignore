@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.env
+vendor/
+dist/
+build/
+*.egg-info
+.DS_Store
+.envrc
+
+# Output directory for generated files
+configs/
