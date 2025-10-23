@@ -9,8 +9,8 @@ def main():
     parser.add_argument('-u', '--username', type=str, required=True, help='Username for the target server')
     parser.add_argument('-p', '--password', type=str, required=True, help='Password for the target server')
     parser.add_argument(
-                        '-m', '--manufacturer', type=str, choices=['dell', 'supermicro'], required=True, 
-                        help='Manufacturer of the target server (dell, supermicro)')
+                        '-m', '--manufacturer', type=str, choices=['dell', 'smc'], required=True, 
+                        help='Manufacturer of the target server (dell, smc)')
     parser.add_argument('-o', '--outdir', type=str, default='configs', help='Output directory for BIOS config files')
     parser.add_argument('-f', '--format', type=str, choices=['xml', 'json'], default='xml', 
                         help='Format for BIOS config file (xml or json)')

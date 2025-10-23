@@ -136,6 +136,7 @@ class BiosConfig:
             raise RuntimeError(result)
     
 
+
     def _set_smc(self, file: str, stage: bool = False) -> dict:
         """
         This function uses sum to apply a given bios config to a given smc server.  If stage=True the config
@@ -145,7 +146,7 @@ class BiosConfig:
         file = the bios config file to be applied.  Can be xml or json
         stage = boolean
 
-        This function will return true if success or raise an exception if failure.
+        This function will return a dict with status, stdout, stderr, and exit_code.
         """
         sum = "/usr/local/bin/sum"
         is_command(sum)
@@ -159,29 +160,36 @@ class BiosConfig:
             self.password,
             "-c",
             "ChangeBiosCfg",
-            "--skip_unknown",
             "--file",
             file,
         ]
-        out_obj = {}
-
         if not stage:
             command += ["--reboot"]
 
-        result = subprocess.run(command, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out_obj = {}
+        result = subprocess.run(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout = result.stdout
         stderr = result.stderr
+        exit_code = result.returncode
 
-        if result.returncode == 0:
-            stdout = result.stdout
+        out_obj["stdout"] = stdout
+        out_obj["stderr"] = stderr
+        out_obj["exit_code"] = exit_code
+
+        if exit_code == 0:
             if "The BIOS configuration is updated" in stdout:
-                out_obj.update({"status": "completed"})
-                return out_obj
+                out_obj["status"] = "completed"
             else:
-                print("Failed to set bios for {id}")
-                raise RuntimeError(stderr)
+                out_obj["status"] = "unknown-success"
+            return out_obj
+        elif exit_code == 65:
+            out_obj["status"] = "reboot-required"
+            # SUM exit 65 means reboot required, not error
+            return out_obj
         else:
-            print("Failed to set bios for {id}")
-            raise RuntimeError(stderr)
+            out_obj["status"] = "error"
+            # Optionally print or log stdout/stderr here
+            return out_obj
 
 
     def get_bios(self, ext, outdir=None):
@@ -196,7 +204,7 @@ class BiosConfig:
                 print("Currently SMC supports only xml")
             return self._get_smc(outdir)
         else:
-            raise RuntimeError(f"Manufacturer ({self.manufacturer_id}): currently not supported")
+            raise RuntimeError(f"Manufacturer ({self.manufacturer}): currently not supported")
 
 
     def set_bios(self, file=None, stage=False):
