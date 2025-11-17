@@ -1,7 +1,10 @@
 version: '3.8'
 services:
   bios-tool:
-    build: .
+    platform: linux/amd64
+    build: 
+      context: .
+      platform: linux/amd64
     volumes:
       - .:/opt/bios-tool
     tty: true

@@ -56,6 +56,7 @@ if [[ $COMPOSE -eq 1 ]]; then
   fi
 else
   DCMD=(docker build)
+  DCMD+=(--platform linux/amd64)
   if [[ $NO_CACHE -eq 1 ]]; then
     DCMD+=(--no-cache)
   fi

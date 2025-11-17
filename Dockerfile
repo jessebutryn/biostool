@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM --platform=linux/amd64 ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -20,6 +20,9 @@ RUN apt-get update \
          ipmitool \
          libssl-dev \
          libssl3 \
+         pciutils \
+         rpm \
+         cpio \
      && rm -rf /var/lib/apt/lists/*
 
 # Ensure unversioned libssl & libcrypto symlinks exist for vendor binaries that expect them
@@ -44,6 +47,9 @@ RUN mkdir -p /opt/vendor \
 # Make the vendor installer script executable and run it during image build.
 RUN chmod +x /opt/bios-tool/scripts/install_vendors.sh \
     && /opt/bios-tool/scripts/install_vendors.sh
+
+# Add vendor tools to PATH
+ENV PATH="/opt/dell/srvadmin/bin:/usr/local/bin:${PATH}"
 
 RUN python3 -m pip install --no-cache-dir /opt/bios-tool
 

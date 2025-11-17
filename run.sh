@@ -56,10 +56,10 @@ fi
 # Ensure image exists, otherwise build it
 if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
   echo "Docker image $IMAGE not found; building..."
-  docker build -t "$IMAGE" "$REPO_DIR"
+  docker build --platform linux/amd64 -t "$IMAGE" "$REPO_DIR"
 fi
 
-DOCKER_ARGS=(--rm -it)
+DOCKER_ARGS=(--rm -it --platform linux/amd64)
 
 if [ "$NO_MOUNT" -eq 0 ]; then
   DOCKER_ARGS+=( -v "$REPO_DIR":/opt/bios-tool )
